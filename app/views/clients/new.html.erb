@@ -1,0 +1,18 @@
+<div class="page-header">
+  <h1>New Client</h1>
+</div>
+<div class="container-fluid">
+  <div id="ui-view" data-select2-id="ui-view">
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <strong>Details</strong>
+        </div>
+        <div class="card-body">
+          <%= render 'form', client: @client %>
+          <%= link_to 'Back', clients_path %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

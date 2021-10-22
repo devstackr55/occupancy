@@ -1,0 +1,44 @@
+<div class="page-header">
+  <h1>Project Plan</h1>
+</div>
+<div class="container-fluid">
+  <div id="ui-view" data-select2-id="ui-view">
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <strong>Goal setup</strong>
+        </div>
+        <div class="card-body">
+          <%= form_tag("", method: 'get' ) do %>
+            <div class="row">
+              <div class="col">
+                <input type="text" value="<%= @per_hour_billing%>" class="form-control" id="start-at" placeholder="Average billing per Hour" name="per_hour_billing">
+              </div>
+              <div class="col">
+                <input type="text" value="<%= @goal_amount%>" class="form-control" id="start-at" placeholder="Target Goal weekly (in USD)" name="goal_amount">
+              </div>
+              <div class="col">
+                <input type="date" value="<%= @target_date%>" class="form-control" id="end-at" placeholder="End Date" name="target_date">
+              </div>
+              <button type="submit" class="btn btn-primary">Search</button>
+
+            </div>
+          <%end%>
+
+          <div class="table-responsive-sm" id="timesheet-details">
+            <%if @no_of_projects_required > 0%>
+              <%= @no_of_projects_required%> project(s) required to reach the target.
+            <%end%>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+    })
+</script>

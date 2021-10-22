@@ -1,0 +1,110 @@
+<h1>Invoice Details for <%= @project.name%></h1>
+<div class="container-fluid">
+  <div id="ui-view" data-select2-id="ui-view">
+    <div>
+      <div class="card">
+        <div class="card-header">Invoice
+          <strong><%=@project.name%></strong>
+          <%= link_to project_invoice_path(@project, @invoice, format: :csv), class: "btn btn-sm btn-secondary float-right mr-1" do %>
+            <i class="bi bi-download"></i> Download CSV
+          <%end%>
+          <a class="btn btn-sm btn-secondary float-right mr-1 d-print-none" href="#" onclick="javascript:window.print();" data-abc="true">
+            <i class="bi bi-printer"></i> Print</a>
+        </div>
+
+        <div class="card-body" id="module">
+
+          <%= render partial: 'client_details', locals: {project: @project, start_date: @invoice.start_date, end_date: @invoice.end_date}%>
+
+          <a role="button" class="table-collapsed collapsed btn btn-sm btn-secondary" data-toggle="collapse" href="#timesheet-details" aria-expanded="false" aria-controls="timesheet-details"></a>
+          <%unless @invoice.paid?%>
+            <a role="button" class="form-collapsed collapsed btn btn-sm btn-primary float-right" data-toggle="collapse" href="#payment-capture-form" aria-expanded="false" aria-controls="payment-capture-form"></a>
+          <%end%>
+
+          <div class="table-responsive-sm collapse" id="timesheet-details" aria-expanded="false">
+
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Details</th>
+                  <th>Task</th>
+                  <th>Logged hours</th>
+                  <th>Date</th>
+                  <th><%=t '.actions', :default => t("helpers.actions") %></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @invoice.timesheets.each do |timesheet| %>
+                  <tr>
+                    <td class="center"><%= timesheet.id%></td>
+                    <td>
+                      <%= simple_format(truncate(timesheet.comments, length: 70)).html_safe %>
+                    </td>
+                    <td><%= timesheet.task_type %></td>
+                    <td><%= timesheet.working_hours %></td>
+                    <td><%= timesheet.on_date.strftime(STD_DATE_FORMAT) %></td>
+                    <td class="right"><%= number_to_currency(@project.hourly_charge*timesheet.working_hours)%></td>
+                    <td>
+
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+
+          </div>
+
+          <%unless @invoice.paid?%>
+            <div id="payment-capture-form" class="table-responsive-sm collapse">
+              <br/><h2>Add Payment details</h2><br/>
+
+              <%= form_with(model: [@project, @invoice], url: capture_payment_project_invoice_path(@project, @invoice), method: :put,:html => { :class => "form-horizontal invoice" }) do |f| %>
+
+                <% if @invoice.errors.any? %>
+                  <div id="error_expl" class="panel panel-danger">
+                    <div class="panel-heading">
+                      <h3 class="panel-title"><%= pluralize(@invoice.errors.count, "error") %> prohibited this invoice from being saved:</h3>
+                    </div>
+                    <div class="panel-body">
+                      <ul>
+                      <% @invoice.errors.full_messages.each do |msg| %>
+                        <li><%= msg %></li>
+                      <% end %>
+                      </ul>
+                    </div>
+                  </div>
+                <% end %>
+
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="paid_amount">Paid Amount</label>
+                    <%= f.text_field :paid_amount, class: 'form-control', placeholder: "Paid Amount in USD" %>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="paid_at">Paid On</label>
+                    <%= f.date_field :paid_at, class: 'form-control' %>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="payment_reference">Payment Reference</label>
+                    <%= f.text_area :payment_reference, class: 'form-control', placeholder: "Payment Reference" %>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="sales_remark">Remark</label>
+                    <%= f.text_area :sales_remark, class: 'form-control', placeholder: "Remark" %>
+                  </div>
+                </div>
+
+                <%= f.submit "Add Details", class: 'btn btn-primary float-right' %>
+
+              <%end%>
+            </div>
+          <%end%>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<%= form_with(model: project) do |form| %>
+  <% if project.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
+
+      <ul>
+        <% project.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="payment_reference">Project Name</label>
+        <%= form.text_field :name, class: "form-control", placeholder: "Project/Profile Name"%>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="sales_remark">Client</label>
+        <%= form.select :client_id, Client.all.collect{|s| [s.title, s.id]}, { prompt: 'Select Client', selected: @project.client.try(:id) }, {class: "form-control float-start"}%>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="payment_reference">Profile Name</label>
+        <%= form.text_field :profile_name, class: "form-control", placeholder: "Project/Profile Name"%>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="payment_reference">Category</label>
+        <%= form.select :category, options_for_select(Project.categories.map {|key, value| [key.titleize, Project.categories.key(value)]}, @project.category), { prompt: 'Select Category' }, class: "form-control" %>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="sales_remark">Prefered Payment Cycle</label>
+        <%= form.select :payment_cycle, options_for_select(Project.payment_cycles.map {|key, value| [key.titleize, Project.payment_cycles.key(value)]}, @project.payment_cycle), {}, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="payment_reference">Start Date</label>
+        <%= form.date_field :start_at, class: "form-control"%>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="sales_remark">End Date (Expected)</label>
+        <%= form.date_field :expected_end_date, class: "form-control"%>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="payment_reference">Expected Working hours (Weekly)</label>
+        <%= form.number_field :working_hours_per_week, class: "form-control"%>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="sales_remark">Hourly Rate (in USD)</label>
+        <%= form.number_field :hourly_charge, class: "form-control"%>
+      </div>
+    </div>
+
+
+    <div class="actions">
+      <%= form.submit "Save", class: "btn btn-primary float-right" %>
+    </div>
+
+<% end %>

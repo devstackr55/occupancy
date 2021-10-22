@@ -1,0 +1,3 @@
+$("#timesheet-form").html("<%= j (render partial: 'form', locals: {timesheet: @timesheet}) %>")
+
+$("#timesheet-form-title").text("Update Time log for <%= @timesheet.project.name%> | <%= @timesheet.task_type%>");

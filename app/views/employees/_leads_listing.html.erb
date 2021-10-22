@@ -1,0 +1,44 @@
+<div class="card">
+  <div class="card-header">
+    <strong><%= title%></strong>
+  </div>
+  <div class="card-body">
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th scope="col">Name</th>
+          <th scope="col">Project</th>
+          <th scope="col">Weekly Allocation (in hrs)</th>
+          <th scope="col">Role</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% employees.each do |emp| %>
+          <tr>
+            <td rowspan="<%= emp.employee_projects.count + 1 %>"><%= emp.id %></td>
+            <td rowspan="<%= emp.employee_projects.count + 1%>">
+              <%= emp.name%>&nbsp;|&nbsp;<%= emp.weekly_occupancy%> hrs&nbsp;|&nbsp;<small><%= emp.primary_skills.map(&:title).join(", ")%></small><br/>
+              <small class="">
+                Dev Skill <%=emp.development_skill%><i class="bi bi-award-fill"></i>&nbsp;|&nbsp;
+                Client Management <%=emp.client_management_skill%><i class="bi bi-award-fill"></i>&nbsp;|&nbsp;
+                Mentorship <%=emp.mentorship_skill%><i class="bi bi-award-fill"></i>
+              </small>
+            </td>
+
+          </tr>
+          <% emp.employee_projects.each do |emp_pro|%>
+          <tr>
+            <td><%= emp_pro.project.name%></td>
+            <td class="text-center"><%= emp_pro.weekly_occupancy%> hrs</td>
+            <td><%= emp_pro.role%></td>
+          </tr>
+          <%end%>
+        <% end %>
+      </tbody>
+    </table>
+
+  </div>
+</div>

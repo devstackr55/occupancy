@@ -1,0 +1,31 @@
+<%= form_for @invoice, url: project_invoices_path(project_id: @project.id, id: @invoice.id), :html => { :class => "form-horizontal invoice" } do |f| %>
+
+  <% if @invoice.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@invoice.errors.count, "error") %> prohibited this invoice from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @invoice.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+
+    <%= f.text_field :start_date, :class => 'form-control' %>
+    <%= f.text_field :end_date, :class => 'form-control' %>
+
+
+  <div class="form-group">
+    <div class="offset-lg-4 col-lg-8">
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                project_invoices_path(project_id: @project.id), :class => 'btn btn-default' %>
+    </div>
+  </div>
+
+<% end %>

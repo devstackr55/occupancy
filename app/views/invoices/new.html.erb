@@ -1,0 +1,70 @@
+<div class="page-header">
+  <h1>New Invoice</h1>
+</div>
+<div class="container-fluid">
+  <div id="ui-view" data-select2-id="ui-view">
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <strong><%=@project.name%></strong>
+        </div>
+        <div class="card-body">
+
+          <%= render partial: 'client_details', locals: {project: @project, start_date: nil, end_date: nil}%>
+
+          <%= form_tag(timesheets_project_invoices_path(@project), method: 'get', remote: true ) do %>
+            <% dates = calculate_next_invoice_ranges(@project)%>
+            <div class="row">
+              <div class="col">
+                <input type="date" value="<%= dates[0]%>" class="form-control" id="start-at" placeholder="Start Date" name="start_date">
+              </div>
+              <div class="col">
+                <input type="date" value="<%= dates[1]%>" class="form-control" id="end-at" placeholder="End Date" name="end_date">
+              </div>
+              <button type="submit" class="btn btn-primary">Search</button>
+
+            </div>
+          <%end%>
+
+          <div class="table-responsive-sm" id="timesheet-details">
+
+          </div>
+          <%= form_with(model: [@project, @invoice], :html => { :class => "form-horizontal invoice" }) do |f| %>
+          <% if @invoice.errors.any? %>
+            <div id="error_expl" class="panel panel-danger">
+              <div class="panel-heading">
+                <h3 class="panel-title"><%= pluralize(@invoice.errors.count, "error") %> prohibited this invoice from being saved:</h3>
+              </div>
+              <div class="panel-body text-danger">
+                <ul>
+                <% @invoice.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+                </ul>
+              </div>
+            </div>
+          <% end %>
+            <%= f.hidden_field :start_date %>
+            <%= f.hidden_field :end_date%>
+            <%= f.hidden_field :total_amount%>
+            <%= f.hidden_field :total_hours%>
+
+            <%= f.submit "Create Invoice", :class => 'btn btn-success float-right invisible', id: "invoice-submit" %>
+          <%end%>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+      // $("#")
+      $("#start-at").change(function(){
+        $("#invoice_start_date").val($(this).val());
+      });
+      $("#end-at").change(function(){
+        $("#invoice_end_date").val($(this).val());
+      });
+    })
+</script>

@@ -1,0 +1,77 @@
+
+
+<%= form_with(model: [@project, @employee_project], :html => { :class => "form-horizontal resource-management" }) do |form| %>
+  <% if employee_project.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(employee_project.errors.count, "error") %> prohibited this employee_project from being saved:</h2>
+
+      <ul>
+        <% employee_project.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="paid_amount">Select Employee</label>
+
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select Employee
+        <span class="caret"></span></button> <span id="selected-name"></span>
+        <ul class="dropdown-menu">
+          <%Employee.joins(:primary_skills).all.each do |emp|%>
+            <li onclick="return setValues('<%= emp.id%>','<%= emp.name%>');">
+              <a>
+                <%= "#{emp.name} (#{emp.primary_skills.map(&:title).join})"%><span class="float-right"><%= emp.weekly_occupancy%>hrs</span><br/>
+                <small class="">
+                  Dev Skill <%=emp.development_skill%><i class="bi bi-award-fill"></i>&nbsp;|&nbsp;
+                  Client Management <%=emp.client_management_skill%><i class="bi bi-award-fill"></i>&nbsp;|&nbsp;
+                  Mentorship <%=emp.mentorship_skill%><i class="bi bi-award-fill"></i>
+                </small>
+              </a>
+            </li>
+          <%end%>
+        </ul>
+      </div>
+
+      <%= form.hidden_field :employee_id%>
+      <%#= form.select :employee_id, Employee.joins(:primary_skills).all.collect { |p| [ "#{p.name} (#{p.primary_skills.map(&:title).join()})", p.id ] }, { prompt: "Select"}, class: "form-control"%>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="paid_at">Weekly availablity</label>
+      <%= form.number_field :weekly_occupancy, max: 40, class: "form-control"%>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="payment_reference">Start At</label>
+      <%= form.date_field :start_at, class: "form-control"%>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="sales_remark">Pull off from Project (expected)</label>
+      <%= form.date_field :ended_on, class: "form-control"%>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="payment_reference">Role</label>
+      <%= form.select :role, options_for_select(EmployeeProject.roles.map {|key, value| [key.titleize, EmployeeProject.roles.key(value)]}, @employee_project.role), {}, class: "form-control" %>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="sales_remark">Comments</label>
+      <%= form.text_area :comments, class: "form-control"%>
+    </div>
+  </div>
+
+  <%= form.submit "Add Details", class: 'btn btn-primary float-right' %>
+
+<% end %>
+
+<script type="text/javascript">
+  function setValues(id, name){
+    $('#employee_project_employee_id').val(id);
+    $('#selected-name').text(name)
+  }
+</script>

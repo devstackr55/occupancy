@@ -1,0 +1,32 @@
+<h1><%= @employee.name%>'s Project Allocation</h1>
+<h2>40/<%= @employee.employee_projects.map(&:weekly_occupancy).sum%> Occupied</h2>
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Weekly Allocation (in hrs)</th>
+      <th scope="col">Role</th>
+      <th scope="col">Start at</th>
+      <th scope="col">End at</th>
+      <th scope="col">Edit Allocation</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @employee.employee_projects.each do |ep| %>
+      <tr>
+        <td><%= ep.project.name%></td>
+        <td><%= ep.weekly_occupancy%> hrs</td>
+        <td><%= ep.role%></td>
+        <td><%= ep.start_at.try(:strftime, STD_DATE_FORMAT)%></td>
+        <td><%= ep.ended_on.try(:strftime, STD_DATE_FORMAT)%></td>
+        <td><%#= link_to 'Update Allocation', edit_employee_employee_project_path(@employee, ep) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Edit', edit_employee_path(@employee) %> |
+<%= link_to 'Back', employees_path %>

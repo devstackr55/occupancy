@@ -1,0 +1,58 @@
+<div class="row mb-4">
+  <div class="col-sm-4">
+    <h6 class="mb-3">From:</h6>
+    <div>
+        <strong><%= project.profile_name%></strong>
+    </div>
+    <div>42, Awesome Enclave</div>
+    <div>New York City, New york, 10394</div>
+    <div>Email: admin@bbbootstrap.com</div>
+    <div>Phone: +48 123 456 789</div>
+  </div>
+
+  <div class="col-sm-4">
+    <h6 class="mb-3">To:</h6>
+    <div>
+      <% client = project.client%>
+        <strong><%= client.title%></strong>
+    </div>
+    <div><%= client.contact_person%></div>
+    <div><%= client.address%></div>
+    <div>Email: <%= client.email%></div>
+    <div>Phone: <%= client.contacts%></div>
+    <div>Hourly rate: <strong><%= number_to_currency(project.hourly_charge)%></strong></div>
+  </div>
+
+  <div class="col-sm-4">
+    <h6 class="mb-3">Last Invoice Details:</h6>
+    <%if @invoice.try(:id).nil?%>
+      <% last_invoice = @project.last_paid%>
+      <%unless last_invoice.nil?%>
+        <div>Last Invoice Generated at
+            <strong><%= last_invoice.paid_at.strftime(STD_DATE_FORMAT)%></strong>
+        </div>
+        <div>Duration
+          <strong><%= last_invoice.start_date.strftime(STD_DATE_FORMAT)%> to <%= last_invoice.end_date.strftime(STD_DATE_FORMAT)%></strong>
+        </div>
+        <div>Invoice <%= link_to "#{last_invoice.invoice_id}", project_invoice_path(@project, last_invoice) %></div>
+        <div>Last Billed amount <strong><%= number_to_currency(last_invoice.total_amount)%></strong></div>
+        <div>Last Paid amount <strong><%= number_to_currency(last_invoice.paid_amount)%></strong></div>
+      <%else%>
+        <div>No Records found</div>
+      <%end%>
+    <%else%>
+      <div>Invoice
+          <strong><%= @invoice.invoice_id%></strong>
+      </div>
+      <div>From <%= start_date.strftime(STD_DATE_FORMAT)%> to <%= end_date.strftime(STD_DATE_FORMAT)%></div>
+      <div>Billed amount <strong><%= number_to_currency(@invoice.total_amount)%></strong></div>
+      <div>Status
+        <%if @invoice.paid?%>
+          <strong class="btn btn-sm btn-success"><i class="bi bi-check2-all"></i> <%= @invoice.status%></strong>
+        <%else%>
+          <strong><%= @invoice.status%></strong>
+        <%end%>
+      </div>
+    <%end%>
+  </div>
+</div>

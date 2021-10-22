@@ -1,0 +1,7 @@
+$("#timelogs-on_date").html("<%= j (render partial: 'index', locals: {timesheets: @timesheets}) %>");
+$("#timesheet-form").html("<%= j (render partial: 'form', locals: {timesheet: @new_timesheet}) %>")
+
+$("#timesheet_on_date").val("<%= @timesheet.on_date.to_s%>");
+$("#timesheet-form-title").text("Time log for <%= @timesheet.on_date.strftime('%b %d')%>");
+
+renderCalander("<%= @timesheet.on_date.to_s%>");

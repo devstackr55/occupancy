@@ -1,0 +1,110 @@
+<%= form_with(model: employee, :html => { :class => "form-horizontal resource-management" }) do |form| %>
+  <% if employee.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(employee.errors.count, "error") %> prohibited this employee from being saved:</h2>
+
+      <ul>
+        <% employee.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="payment_reference">Full Name</label>
+      <%= form.text_field :name, class: "form-control", placeholder: "Full Name"%>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="sales_remark">Designation</label>
+      <%= form.select :designation, options_for_select(Employee.designations.map {|key, value| [key.titleize, Employee.designations.key(value)]}, @employee.designation), {}, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="payment_reference">Email (Same will use for Sign in)</label>
+      <%= form.email_field :email, class: "form-control", placeholder: "Official Email"%>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="sales_remark">Phone</label>
+      <%= form.text_field :phone, class: "form-control", placeholder: "Mobile"%>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="sales_remark">Client Communication Skills <span id="client_management_skill"></span></label>
+      <div class="slidecontainer">
+        <%= form.range_field :client_management_skill, min: 0, max: 10, class: "slider slider-green"%>
+      </div>
+      <label for="sales_remark">Development Skills <span id="development_skill"></span></label>
+      <div class="slidecontainer">
+        <%= form.range_field :development_skill, min: 0, max: 10, class: "slider slider-blue"%>
+      </div>
+      <label for="sales_remark">Mentorship Skills <span id="mentorship_skill"></span></label>
+      <div class="slidecontainer">
+        <%= form.range_field :mentorship_skill, min: 0, max: 10, class: "slider slider-blue"%>
+      </div>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="payment_reference">Primary Skill</label>
+      <%= form.select :primary_skill_id, Skill.all.collect{|s| [s.title, s.id]}, { prompt: 'Select Skill', selected: @employee.primary_skills.try(:first).try(:id) }, {class: "form-control float-start", size: 8}%>
+    </div>
+  </div>
+
+  <%if can? :create, Employee%>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="payment_reference">CTC</label>
+        <input type="number" id="ctc_per_year" class="form-control" placeholder="CTC" />
+        <%= form.hidden_field :ctc_per_day, class: "form-control", placeholder: "CTC"%>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="sales_remark">Phone</label>
+        <%= form.date_field :last_working_day, class: "form-control"%>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="payment_reference">Role</label>
+        <%= form.select :role, options_for_select(User.roles.map {|key, value| [key.titleize, User.roles.key(value)]}, @employee.user.try(:role)), {}, class: "form-control" %>
+      </div>
+    </div>
+  <%end%>
+
+  <div class="actions">
+    <%= form.submit "Save", class: "btn btn-primary float-right" %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+      $("#ctc_per_year").change(function(){
+        let ctc_annual = $(this).val();
+        if(isNaN(ctc_annual)){
+          alert("Please enter a valid CTC");
+          return;
+        }
+        // per day ctc in USD
+        // 262 working days (weekdays)
+        // total working days = total weekday - leaves
+        // total working days = 250 days
+        // per day in INR = ctc_annual/250
+        $("#employee_ctc_per_day").val((ctc_annual/250/8/75));
+      });
+
+      $("#employee_client_management_skill").change(function(){
+        $("#client_management_skill").text($(this).val());
+      })
+      $("#employee_development_skill").change(function(){
+        $("#development_skill").text($(this).val());
+      })
+      $("#employee_mentorship_skill").change(function(){
+        $("#mentorship_skill").text($(this).val());
+      })
+
+    })
+</script>

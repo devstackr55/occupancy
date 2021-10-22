@@ -1,0 +1,74 @@
+<%if params[:resource_path] == 'projects'%>
+  <h1><%= Project.find(@project).name%> <small>Team members</small></h1>
+<%else%>
+  <h1>Employees</h1>
+
+  <%= form_with url: search_employees_path, method: :get do |form| %>
+    <div id="toolbar" class="row">
+      <div class="col">
+        <%= form.text_field :name, value: @name ,class: "form-control", placeholder: "Search by Name"%>
+      </div>
+      <div class="col">
+        <%= form.select :occupancy, options_for_select({"0hr - 10 hrs": "0,10", "10hrs to 20 hrs": "11,20", "20hrs to 30hrs": "21,30", "30hrs to 44hrs": "31,44", "Overloaded": "44,100" }, @weekly_occupancy), { prompt: "Weekly Occupancy"}, {class: "form-control"}%>
+      </div>
+      <div class="col">
+        <%= form.select :project, options_from_collection_for_select(Project.all, :id, :name, @project), { prompt: 'Select Project'}, {class: "form-control"}%>
+      </div>
+      <div class="col">
+        <%= form.select :role, options_for_select(EmployeeProject.roles, @role), { prompt: "Any Role"}, {class: "form-control"}%>
+      </div>
+      <div class="col">
+        <%= form.submit "Search", class: "btn btn-primary" %>
+      </div>
+    </div>
+  <%end%>
+
+<%end%>
+
+<table class="table datatable">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">
+        Name
+        <%= link_to "<i class='bi bi-sort-alpha-up'></i>".html_safe, request.query_parameters.merge(sort: "name", order_by: "ASC")%>
+        <%= link_to "<i class='bi bi-sort-alpha-down'></i>".html_safe, request.query_parameters.merge(sort: "name", order_by: "DESC")%>
+      </th>
+      <th scope="col">
+        Projects
+        <%= link_to "<i class='bi bi-sort-alpha-up'></i>".html_safe, request.query_parameters.merge(sort: "total_projects", order_by: "ASC")%>
+        <%= link_to "<i class='bi bi-sort-alpha-down'></i>".html_safe, request.query_parameters.merge(sort: "total_projects", order_by: "DESC")%>
+      </th>
+      <th scope="col">
+        Weekly Allocation
+        <%= link_to "<i class='bi bi-sort-alpha-up'></i>".html_safe, request.query_parameters.merge(sort: "total_allocation", order_by: "ASC")%>
+        <%= link_to "<i class='bi bi-sort-alpha-down'></i>".html_safe, request.query_parameters.merge(sort: "total_allocation", order_by: "DESC")%>
+      </th>
+      <th scope="col">Roles</th>
+      <th scope="col">Skills</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @employees.each do |employee| %>
+      <tr>
+        <td><%= employee.id%></td>
+        <td><%= link_to employee.name, employee%> (<%= employee.designation %> | <%= employee.experience%>+ years)</td>
+        <td><%= employee.total_projects%> Project(s)</td>
+        <td class="text-center"><%= employee.total_allocation%></td>
+        <td><%= employee.employee_projects.map(&:role).uniq.join(", ")%></td>
+        <td><%= employee.skills.map(&:title).join(", ")%></td>
+        <td>
+          <%#= link_to 'Project Allocation', new_employee_employee_project_path(employee) %>
+          <!-- <%#= link_to 'TimeSheet', employee_timesheets_path(employee) %>&nbsp;|&nbsp; -->
+          <%= link_to 'Edit', edit_employee_path(employee) %>
+          <%#= link_to 'Destroy', employee, method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+<%= link_to "New Employee", new_employee_path, class: 'btn btn-primary float-right' if can? :create, User %>

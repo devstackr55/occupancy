@@ -1,0 +1,41 @@
+<h1>Projects</h1>
+
+<div class="row">
+
+  <table class="table datatable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name & Client</th>
+        <th>Profile Name</th>
+        <th>Skills</th>
+        <th>Started At</th>
+        <th>Expected end</th>
+        <th width="80">Allocation (Required/Actual)</th>
+        <th>Hourly Charges</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <% @projects.each do |project| %>
+        <tr style="background-color: <%= occupancy_level(project)%>">
+          <td><%= project.id%></td>
+          <td><%= link_to project.name, edit_project_path(project)%><br/>(<%= link_to project.client.details, project.client%>)</td>
+          <td><%= project.profile_name%></td>
+          <td><%= project.project_skills.map{|x| "#{x.skill.title} (#{x.quantity})"}.join(", ")%></td>
+          <td><%= project.start_at.strftime(STD_DATE_FORMAT)%></td>
+          <td><%= project.expected_end_date.try(:strftime, STD_DATE_FORMAT)%></td>
+          <td class="text-center"><%= project.working_hours_per_week.to_i%> / <%= (project.total_occupied || 'NA')%></td>
+          <td><%= number_to_currency(project.hourly_charge)%></td>
+          <td><%= link_to 'Members', project_employee_projects_path(project)%>
+            <!-- &nbsp;|&nbsp;<%#= link_to 'Invoice', project_invoices_path(project)%> -->
+          </td>
+        </tr>
+      <%end%>
+    </tbody>
+  </table>
+
+  <%= link_to 'New Project', new_project_path, class: "btn btn-sm btn-primary float-right" if can? :create, Project %>
+</div>

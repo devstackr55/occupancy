@@ -1,0 +1,50 @@
+<%= form_with(model: client) do |form| %>
+  <% if client.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(client.errors.count, "error") %> prohibited this client from being saved:</h2>
+
+      <ul>
+        <% client.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="payment_reference">Client Name</label>
+      <%= form.text_field :title, class: "form-control", placeholder: "Client Name"%>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="sales_remark">Email</label>
+      <%= form.email_field :email, class: "form-control", placeholder: "Communication Email"%>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="payment_reference">Contact Person</label>
+      <%= form.text_field :contact_person, class: "form-control", placeholder: "Contact Person"%>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="sales_remark">Contact Details</label>
+      <%= form.text_field :contacts, class: "form-control", placeholder: "Contacts (Emails, Phone, links etc)"%>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="payment_reference">Address</label>
+      <%= form.text_area :address, class: "form-control", placeholder: "Address (Optional)"%>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="sales_remark">Description</label>
+      <%= form.text_field :description, class: "form-control", placeholder: "Details"%>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Save", class: "btn btn-primary float-right" %>
+  </div>
+<% end %>

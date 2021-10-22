@@ -1,0 +1,19 @@
+<div class="page-header">
+  <h1><%= @project.name%> | Resource Management</h1>
+</div>
+<div class="container-fluid">
+  <div id="ui-view" data-select2-id="ui-view">
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <strong><%=@project.name%> | Expected/Occupied <%= @project.working_hours_per_week || 'NA'%>/<%= @project.total_occupied%> hours per week</strong>
+        </div>
+        <div class="card-body">
+
+            <%= render 'form', employee_project: @employee_project %>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,97 @@
+<div class="row">
+  <div class="col-lg-12">
+	<div class="card text-dark bg-light mb-3">
+	  <div class="card-header">Overview</div>
+	  <div class="row">
+        <div class="col">
+		  <ul class="list-group list-group-flush">
+			<li class="list-group-item">
+			  <div class="ms-2 me-auto">
+				<div class="fw-bold">Project Name:</div>
+				<%= @project.name %>
+			  </div>
+  			</li>
+  			<li class="list-group-item">
+			  <div class="ms-2 me-auto">
+				<div class="fw-bold">Client Name:</div>
+				<%= @project.client&.contact_person %>
+			  </div>
+  			</li>
+			<li class="list-group-item">
+			  <div class="ms-2 me-auto">
+			    <div class="fw-bold">Start Date:</div>
+				<%= @project.start_at&.to_time&.strftime("#{@project.start_at.day.ordinalize} %B %Y") %>
+		      </div>
+			</li>
+		   	<li class="list-group-item">
+			  <div class="ms-2 me-auto">
+			    <div class="fw-bold">Working hours:</div>
+				<%= @project.working_hours_per_week || 'N/A' %>
+			  </div>
+			</li>
+			<li class="list-group-item">
+			  <div class="ms-2 me-auto">
+			    <div class="fw-bold">Status:</div>
+				      <%#= @project.active ? 'Active' : 'In-active' %>
+			  </div>
+			</li>
+	      </ul>
+		</div>
+	    <div class="col">
+	      <ul class="list-group list-group-flush">
+		    <li class="list-group-item">
+			  <div class="ms-2 me-auto">
+			    <div class="fw-bold">Work Profile name:</div>
+				<%= @project.profile_name || 'N/A' %>
+			  </div>
+		    </li>
+			<li class="list-group-item">
+			  <div class="ms-2 me-auto">
+			    <div class="fw-bold">Hourly charge:</div>
+				<%= number_to_currency(@project.hourly_charge, unit: '$') || 'N/A' %>
+			  </div>
+			</li>
+			<li class="list-group-item">
+			  <div class="ms-2 me-auto">
+			    <div class="fw-bold">Total Invoices:</div>
+				<%= @invoices.size %>
+			  </div>
+			</li>
+			<li class="list-group-item">
+			  <div class="ms-2 me-auto">
+			    <div class="fw-bold">Last Payment Date:</div>
+				<%= @invoices.last ? @invoices.last.start_date.strftime("#{@invoices.last.start_date.day.ordinalize} %B %Y") : 'N/A' %>
+			  </div>
+			</li>
+		    <li class="list-group-item">
+			  <div class="ms-2 me-auto">
+			    <div class="fw-bold">Payment Cycle:</div>
+				<%= @project.payment_cycle || 'N/A' %>
+			  </div>
+			</li>
+	      </ul>
+		</div>
+		<div class="col">
+          <ul class="list-group list-group-flush">
+          	<li class="list-group-item">
+              <div class="ms-2 me-auto">
+			    <div class="fw-bold">Extra Details:</div>
+			  </div>
+			</li>
+			<li class="list-group-item">
+			  <div class="ms-2 me-auto">
+			    <div class="fw-bold">Total Unpaid Invoices:</div>
+			    <%= @invoices.unpaid.size %>
+			  </div>
+			</li>
+			<li class="list-group-item">
+			  <div class="ms-2 me-auto">
+			    <div class="fw-bold">Sub-Total of Unpaid Invoices:</div>
+			    <%= number_to_currency(@invoices.unpaid.sum(:total_amount), unit: '$') %>
+			  </div>
+			</li>
+		</div>
+	  </div>
+	</div>
+  </div>
+</div>

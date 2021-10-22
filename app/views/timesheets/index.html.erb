@@ -1,0 +1,85 @@
+
+<div class="page-header">
+  <h1>My Timesheet</h1>
+</div>
+<div id="calendar">
+</div>
+
+
+  <div class="modal fade" id="employee_timesheet_form">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <!-- <div class="modal-header">
+          <h5 class="modal-title" id="modal-box-title"></h5>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+        </div> -->
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6" id="timesheet-form">
+              <%= render partial: "form", locals: {timesheet: @timesheet} %>
+            </div>
+            <div class="col-md-6">
+              <h2>Listing will come here</h2>
+              <hr/>
+              <div id="timelogs-on_date"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<button style="display:none" type="button" id="khufiya-button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#employee_timesheet_form">Open Modal</button>
+
+
+<script type="text/javascript">
+  //loadForm("<%= new_employee_timesheet_path(@employee)%>", "<%= employee_timesheets_path(@employee, format: :json)%>")
+
+    document.addEventListener('DOMContentLoaded', function() {
+      renderCalander("<%= Date.today.strftime("%F")%>");
+    });
+
+    function renderCalander(date){
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+
+        initialView: 'dayGridMonth',
+        displayEventTime : false,
+        initialDate: date,
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,listWeek'
+        },
+        dateClick: function(info) {
+        },
+        events: "<%= employee_timesheets_path(@employee, format: :json)%>",
+        // eventColor: '#378006',
+        // eventTextColor: "Yellow",
+        selectable: true,
+        select: function(start, end) {
+          console.log("===============ddd==================0")
+          console.log(start.startStr)
+          $.ajax({
+            url: "<%= new_employee_timesheet_path(@employee)%>?on_date="+start.startStr,
+            method: "GET",
+            async: true,
+            dataType: "script",
+            success: function(result){
+              // $("#employee_timesheet_form").modal("show");
+              $("#timesheet_on_date").val(start.startStr);
+              let formatTime = moment(start.startStr).format("DD MMM");
+              $("#timesheet-form-title").text(`Time log for ${formatTime}`);
+            }
+          })
+        }
+      });
+      calendar.render();
+    }
+
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

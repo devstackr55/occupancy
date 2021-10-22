@@ -1,0 +1,20 @@
+<h1>
+  Employee Statistics for <%= @skill.title%>
+</h1>
+  <div class="float-right">
+    <form action="<%= statistics_skill_employees_path%>" method="get">
+      <input type="date" name="date" value="<%= @released_day%>">
+      <!-- <div class="col"> -->
+        <input type="submit" value="Search" class="btn btn-sm btn-primary" data-disable-with="Search">
+      <!-- </div> -->
+    </form>
+  </div>
+
+
+<%= render partial: 'static_count'%>
+
+<%= render partial: 'availability_count'%>
+
+<%= render partial: 'leads_listing', locals: {title: 'Leads and their availablities', employees: @lead_employees}%>
+
+<%= render partial: 'leads_listing', locals: {title: 'Developers and their availablities', employees: @developers}%>

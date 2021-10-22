@@ -1,0 +1,18 @@
+<div class="page-header">
+  <h1>Update Project</h1>
+</div>
+<div class="container-fluid">
+  <div id="ui-view" data-select2-id="ui-view">
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <strong><%= @project.name%>'s details</strong>
+        </div>
+        <div class="card-body">
+          <%= render 'form', project: @project %>
+          <%= link_to 'Back', projects_path %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

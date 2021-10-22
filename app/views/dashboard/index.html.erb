@@ -1,0 +1,74 @@
+
+<div class="section-title">
+  <h2>Overview</h2>
+  <!-- <p>Number of resources avialble in variouse Technologies</p> -->
+</div>
+<div class="row text-center">
+
+  <div class="col-lg-3 col-md-3" data-aos="zoom-in" data-aos-delay="100">
+    <div class="icon-box iconbox-blue">
+      <div class="icon">
+        <i class="fa fa-briefcase"></i>
+      </div>
+      <h4><a href="">Clients / Projects</a></h4>
+      <h4><%= link_to "#{@client_count} / #{@projects_count}", projects_path%></h4>
+    </div>
+  </div>
+
+  <div class="col-lg-3 col-md-3" data-aos="zoom-in" data-aos-delay="100">
+    <div class="icon-box iconbox-blue">
+      <div class="icon">
+        <i class="fa fa-users"></i>
+      </div>
+      <h4><%= link_to "Total Employees", search_employees_path%></h4>
+      <h4><%= link_to @total_employees, search_employees_path%></h4>
+    </div>
+  </div>
+
+  <div class="col-lg-3 col-md-3" data-aos="zoom-in" data-aos-delay="100">
+    <div class="icon-box iconbox-blue">
+      <div class="icon">
+        <i class="fa fa-user-plus"></i>
+      </div>
+      <h4>
+        <%= link_to search_employees_path(occupancy: "0,10") do %>
+          On bench<br/>
+          <%= @available_employees.length%>
+        <%end%>
+      </h4>
+
+
+    </div>
+  </div>
+
+  <div class="col-lg-3 col-md-3" data-aos="zoom-in" data-aos-delay="100">
+    <div class="icon-box iconbox-blue">
+      <div class="icon">
+        <i class="fa fa-user-clock"></i>
+      </div>
+      <h4><a href="">Overloaded</a></h4>
+      <h4><a href=""><%= @overloaded_employees.length%></a></h4>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="section-title">
+  <h2>Skill Based</h2>
+  <p>Number of resources avialble in variouse Technologies</p>
+</div>
+
+<div class="row text-center">
+  <% @skills.each do |skill|%>
+  <div class="col-lg-3 col-md-3" data-aos="zoom-in" data-aos-delay="100">
+    <div class="icon-box iconbox-blue <%= employee_occupancy(skill.id) >= 1 ? 'blink_me' : ''%>">
+      <div class="icon">
+        <i class="fa fa-briefcase"></i>
+      </div>
+      <h4><a href=""><%= skill.title%></a></h4>
+      <h4><%= link_to "#{skill.total_employees}/#{employee_occupancy(skill.id)}", search_employees_path(skill: skill.id)%></h4>
+    </div>
+  </div>
+  <%end%>
+</div>

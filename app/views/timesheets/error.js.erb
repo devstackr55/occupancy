@@ -1,0 +1,7 @@
+<%messages = []%>
+<%@timesheet.errors.full_messages.each do |msg|%>
+    <% messages.push("<li>#{msg}</li>") %>
+<%end%>
+
+console.log("<%= messages.join()%>".html_safe);
+$("ul#timesheet-error").html("<%= messages.join().html_safe%>");

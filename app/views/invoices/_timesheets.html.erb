@@ -1,0 +1,68 @@
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Owner</th>
+      <th>Details</th>
+      <th>Task</th>
+      <th>Logged hours</th>
+      <th>Date</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% timesheets.each do |timesheet| %>
+      <tr>
+        <td class="center"><%= timesheet.id%></td>
+        <td class="center"><%= timesheet.employee.name%></td>
+        <td>
+          <%= simple_format(truncate(timesheet.comments, length: 70)).html_safe %>
+        </td>
+        <td><%= timesheet.task_type %></td>
+        <td><%= timesheet.working_hours %></td>
+        <td><%= timesheet.on_date.strftime(STD_DATE_FORMAT) %></td>
+        <td class="right"><%= number_to_currency(@project.hourly_charge*timesheet.working_hours)%></td>
+        <td>
+
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="row">
+  <div class="col-lg-7"></div>
+  <div class="col-lg-5">
+    <table class="table table-clear">
+      <tbody>
+        <tr>
+          <td class="left">
+              <strong>Total hours</strong>
+          </td>
+          <td class="right"><%= @total_hours%></td>
+        </tr>
+        <tr>
+          <td class="left">
+              <strong>Subtotal</strong>
+          </td>
+          <td class="right"><%= number_to_currency(@total_amount)%></td>
+        </tr>
+        <tr>
+          <td class="left">
+            <strong>Previous Balance</strong>
+          </td>
+          <td class="right"><%= number_to_currency(@prev_balance)%></td>
+        </tr>
+        <tr>
+          <td class="left">
+            <strong>Total</strong>
+          </td>
+          <td class="right">
+            <strong><%= number_to_currency(@total_amount + @prev_balance)%></strong>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+</div>

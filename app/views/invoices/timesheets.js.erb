@@ -1,0 +1,4 @@
+$("#timesheet-details").html("<%= j (render partial: 'timesheets', locals: {timesheets: @timesheets, start_date: @start_date, end_date: @end_date}) %>");
+$("#invoice-submit").removeClass('invisible');
+$("#invoice_total_amount").val(<%= @total_amount + @prev_balance%>)
+$("#invoice_total_hours").val(<%= @total_hours%>)

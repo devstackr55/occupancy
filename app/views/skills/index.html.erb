@@ -1,0 +1,26 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Skills</h1>
+
+<%= link_to 'New Skill', new_skill_path %><i class="fa fa-pencil"></i>
+
+<div class="row icon-boxes">
+
+  <% @skills.each do |skill| %>
+
+  <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="200">
+            <div class="icon-box">
+              <div class="icon"><i class="ri-stack-line"></i></div>
+              <h4 class="title"><a href=""><%= skill.title%></a></h4>
+              <!-- <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p> -->
+              <%= link_to skill_employees_path(skill), class: 'btn btn-sm btn-primary' do%>
+                <i class="bi bi-people"></i> Resources
+              <%end%>
+              <%= link_to statistics_skill_employees_path(skill), class: 'btn btn-sm btn-success' do%>
+                <i class="bi bi-graph-up"></i> Statistics
+              <%end%>
+            </div>
+          </div>
+
+  <%end%>
+</div>
